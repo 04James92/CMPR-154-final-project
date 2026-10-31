@@ -33,10 +33,8 @@ again :
 	call writeString
 
 	call readInt
-
-	mov edx, OFFSET outChoice
-	call writeString
 	call writeDec
+	call crlf
 
 	cmp eax, 5
 	JZ terminate;Jumps to end of program
