@@ -40,12 +40,6 @@ again :
 	JZ terminate;Jumps to end of program
 
 	cmp eax, 1
-	JL invalid_choice;if comparison less than 1, go to invalid choice
-
-	cmp eax, 4
-	JG invalid_choice;if comparison greater than 4, go to invalid choice
-
-	cmp eax, 1
 	JZ choice1;Jumps to choice1
 
 	cmp eax, 2
@@ -57,7 +51,7 @@ again :
 	cmp eax, 4
 	JZ choice4;Jumps to choice4
 
-	JMP again 
+	JMP invalid_Choice
 
 
 choice1:
@@ -78,7 +72,7 @@ choice3:
 choice4:
 	JMP again
 
-invalid_choice:
+invalid_Choice:
 	mov edx, OFFSET outInvalidChoice
 	call writeString
 	JMP again
