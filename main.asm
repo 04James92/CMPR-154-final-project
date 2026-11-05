@@ -20,6 +20,10 @@ INCLUDE Irvine32.inc
   outDisplayBalance BYTE "Your avaliable balance is: $", 0
   outDisplayAddCred BYTE "Please Enter the amount you would like to add", 0
   outDisplayErrorAddCredit BYTE "ERROR Too many credits in balance. Can only be up to 20",0
+  outDisplayErrorInsufficientFunds BYTE "ERROR: Not enough credits to play. Please add some to play" ,0
+  outDisplayGuess BYTE "Please guess the number between 1-10" ,0
+  outDisplayCorrectAns BYTE "Congrajulations you guessed it correct", 0
+  outDisplayIncorrectAns BYTE "You got it wrong", 13, 10, "The correct answer is" ,0
   
   outStatHeader BYTE "=========PLAYER STATS=========",0
   outPlayerName BYTE "Player name: ",0
@@ -39,12 +43,12 @@ INCLUDE Irvine32.inc
   moneyWon DWORD 0
   moneyLost DWORD 0
   MAX_ALLOWED EQU 20
+  randomNum DWORD ?
 
 
 
 .code
 main proc
-
 menu:
   mov eax, 500
   call Delay;creates 500 ms delay
@@ -104,7 +108,44 @@ add_Credits:
 
 
 play_Game:
+  CMP balance, 0
+  JZ insufficient_Funds
+  
+  mov eax, 9
+  call RandomRange
+  inc eax
+  mov randomNum, eax
+
+  mov edx, OFFSET outDisplayGuess
+  call writeString
+
+  call writeDec
+
+  cmp eax, randomNum
+  JZ guess_Correct
+  JMP guess_Incorrect
+
+  guess_Correct:
+  mov edx, OFFSET outDisplayCorrectAns
+  call writeString
+  add balance, 2
+  inc correctGuesses
+
+  guess_Incorrect:
+  mov edx, OFFSET outDisplayIncorrectAns
+  call writeString
+  mov eax, randomNum
+  call writeDec
+	
+
   JMP menu
+
+  insufficient_Funds:
+	mov edx, OFFSET  outDisplayErrorInsufficientFunds
+	call writeString
+	JMP menu
+	
+
 
 display_Stats:
 	mov edx, OFFSET outStatHeader
