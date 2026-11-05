@@ -18,6 +18,8 @@ INCLUDE Irvine32.inc
   outChoice BYTE "you chose: ", 0
   outInvalidChoice BYTE "Invalid input try again ", 0
   outDisplayBalance BYTE "Your avaliable balance is: $", 0
+  outDisplayAddCred BYTE "Please Enter the amount you would like to add", 0
+  outDisplayErrorAddCredit BYTE "ERROR Too many credits in balance. Can only be up to 20",0
   
   outStatHeader BYTE "=========PLAYER STATS=========",0
   outPlayerName BYTE "Player name: ",0
@@ -37,6 +39,7 @@ INCLUDE Irvine32.inc
   moneyWon DWORD 0
   moneyLost DWORD 0
   MAX_ALLOWED EQU 20
+
 
 
 .code
@@ -83,7 +86,22 @@ display_Credits:
   JMP menu
 
 add_Credits:
+  mov edx, OFFSET outDisplayAddCred
+  call writeString
+  call readDec
+  
+  add eax, balance
+  cmp eax, MAX_ALLOWED
+  JG error_Add_Credits
+
+  mov balance, eax
   JMP menu
+
+  error_Add_Credits:
+	mov edx, OFFSET outDisplayErrorAddCredit
+	call writeString
+	JMP menu
+
 
 play_Game:
   JMP menu
