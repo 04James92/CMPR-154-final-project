@@ -41,16 +41,16 @@ INCLUDE Irvine32.inc
   outLeaveStats BYTE "Press Enter to return to the main menu", 0
   
   
-  balance DWORD 0
-  correctGuesses DWORD 0
-  missedGuesses DWORD 0
-  gamesPlayed DWORD 0
-  moneyWon DWORD 0
-  moneyLost DWORD 0
-  MAX_ALLOWED EQU 20
-  randomNum DWORD ?
+  balance DWORD 0 ;the amount of credits they have
+  correctGuesses DWORD 0 ;Stores correct gusess they made
+  missedGuesses DWORD 0 Stores incorrect guesses they made
+  gamesPlayed DWORD 0 ;Stores how many times they have played the guessing game
+  moneyWon DWORD 0 ;The balance won playing the guessing game
+  moneyLost DWORD 0 ;The balance lost when plyaing the guessing game 
+  MAX_ALLOWED EQU 20 ;For add credits (makes sure that they cannot add credits when they have more than 20 credits)
+  randomNum DWORD ? ;stores the random number for guessing game
   playerName BYTE 16 DUP(?)	;Store up to 15 digits + 1 for null term
-  exitStats BYTE 2 DUP(?)	;stores
+  exitStats BYTE 2 DUP(?)	;Store up to 1 digit + 1 for null term  
 
 
 
