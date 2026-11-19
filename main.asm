@@ -66,7 +66,7 @@ mov edx, OFFSET playerName
 mov ecx, 16
 call readString; Checks ecx and does 16 - 1 to store 15 digits and then a null terminator
 
-menu :
+menu : 
   mov eax, 1000
   call Delay; creates 1000 ms delay
   
@@ -95,7 +95,7 @@ menu :
   JMP invalid_Choice
 
 
-display_Credits :
+display_Credits : ;Displays the amount of credits and then goes to menu
   mov edx, OFFSET outBalance
   call writeString
   
@@ -125,16 +125,16 @@ add_Credits :
     JMP menu
 
 
-play_Game :
+play_Game : ;Plays the game
   CMP balance, 0
   JZ insufficient_Funds; Jumps if there is no money in balance
   
-  dec balance
+  dec balance ;decrements everytime user plays 
 
-  mov eax, 10
+  mov eax, 10  ;gives the range used in RandomRange
   call RandomRange; gives random number between 0 - 9
   inc eax; increments so the number is always between 1 - 10
-  mov randomNum, eax
+  mov randomNum, eax ;store the randon number user has to guess
 
   guess_Again : ; label you will go to after displaying invalid input if the user guess isnt between 1 - 10
   mov edx, OFFSET outGuess
@@ -147,34 +147,34 @@ play_Game :
   CMP eax, 0
   JBE invalid_Guess
   
-  inc gamesPlayed
+  inc gamesPlayed 
   
   cmp eax, randomNum; checks to see if guess was correct
   JZ guess_Correct
   JMP guess_Incorrect
   
-  invalid_Guess :
+  invalid_Guess : ;User inputs something outside of 1-10 warns user the input is invalid and lets them guess again
     mov edx, OFFSET outInvalidGuess
     call writeString
     call crlf
     JMP guess_Again
   
-  guess_Correct :
+  guess_Correct : ;User guesses correctly
     mov edx, OFFSET outCorrectAns
     call writeString
     call crlf
   
-    add balance, 2
+    add balance, 2 
     inc correctGuesses
-    add moneyWon, 2
+    add moneyWon, 2 
   
     JMP play_Again
   
-  guess_Incorrect :
+  guess_Incorrect : ;User guesses incorrectly 
     mov edx, OFFSET outIncorrectAns
     call writeString
     mov eax, randomNum
-    call writeDec
+    call writeDec ;inputs the random number 
     call crlf
     
     inc missedGuesses
@@ -182,31 +182,31 @@ play_Game :
   
     JMP play_Again
 
-  play_Again :
+  play_Again : ;asks user if they want to play again
     mov edx, OFFSET outPlayAgain
     call writeString
     call ReadDec
   
     cmp eax, 1
-    JZ play_Game
+    JZ play_Game ;plays game again if user inputs 1
   
     cmp eax, 2
-    JZ menu
+    JZ menu ;goes to menu if user inputs 2
   
-    mov edx, OFFSET outErrorPlayAgain
-    call writeString
-    JMP play_Again
+    mov edx, OFFSET outErrorPlayAgain 
+    call writeString 
+    JMP play_Again ;if user doesnt pick 1 or 2, tells user that input is invalid and then gives them to option to choose if they want to play again or not
   
   
   
-  insufficient_Funds:
+  insufficient_Funds: ;When the user has 0 credits and trys playing game
     mov edx, OFFSET  outInsufficientFunds
     call writeString
     JMP menu
 
 
 
-display_Stats:
+display_Stats: ;Displays a header then all the players stats 
   mov edx, OFFSET outStatHeader
   call writeString
   call crlf
@@ -269,7 +269,7 @@ invalid_Choice : ; prints invalid input if a valid menu choice isnt picked
   JMP menu
 
 
-terminate :
+terminate : ;jumps to end the program 
 exit
 main endp
 end main
