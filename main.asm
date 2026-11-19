@@ -1,29 +1,29 @@
-;---------------------------------- -
+; ---------------------------------- -
 ; Program Description : A guessing game
 ; Author: Muhammad Jafri, Jaime Organista, Juan Campos, Melody Ventura
 ; Creation Date : October 22 2026
 ; Language: IA - 32 x86
 ; Assembler: Microsoft Macro Assembler(MASM)
 ; Collaboration:
-;----------------------------------
+; ----------------------------------
 
 INCLUDE Irvine32.inc
 .data
-outName BYTE "Please input a name (15 character limit)", 13, 10, 0
-outMenu BYTE "Shinobi Syntax Main Menu", 13, 10,
+outName BYTE "Please input a name (15 character limit):", 13, 10, 0
+outMenu BYTE "**********Welcome to Shinobi Syntax's Guess a Number Game:**********", 13, 10, ;Opening greeting message. 
 "1.DISPLAY MY AVAILABLE CREDITS", 13, 10,
 "2.ADD CREDITS TO MY ACCOUNT", 13, 10,
 "3.PLAY THE GUESSING GAME", 13, 10,
 "4.DISPLAY MY STATS", 13, 10,
 "5.EXIT", 13, 10,
-"Choose one of the following options", 13, 10, 0
+"Choose one of the following options: ", 0d
 outChoice BYTE "you chose: ", 0
 outInvalidChoice BYTE "Invalid input try again ", 0
 outBalance BYTE "Your avaliable balance is: $", 0
 outAddCred BYTE "Please Enter the amount you would like to add: ", 0
 outErrorAddCredit BYTE "ERROR Too many credits in balance. Maximum allowable credit is $20.00", 0
 outInsufficientFunds BYTE "ERROR: Not enough credits to play. Please add some to play", 0
-outInvalidGuess BYTE "Your answer was invalid. Please pick a number between 1-10",0
+outInvalidGuess BYTE "Your answer was invalid. Please pick a number between 1-10", 0
 outGuess BYTE "Please guess the number between 1-10: ", 0
 outCorrectAns BYTE "Congrats! you guessed it correct ", 0
 outIncorrectAns BYTE "You Lost!", 13, 10, "The correct answer is ", 0
@@ -38,7 +38,7 @@ outCorrectGuesses BYTE "Correct Guesses: ", 0
 outMissedGuesses BYTE "Missed Guesses: ", 0
 outMoneyWon BYTE "Money you won: $", 0
 outMoneyLost BYTE "Money you lost: $", 0
-outLeaveStats BYTE "Press Enter to return to the main menu",0
+outLeaveStats BYTE "Press Enter to return to the main menu", 0
 
 
 balance DWORD 0
@@ -49,8 +49,8 @@ moneyWon DWORD 0
 moneyLost DWORD 0
 MAX_ALLOWED EQU 20
 randomNum DWORD ?
-playerName BYTE 16 DUP(?);Store up to 15 digits + 1 for null term
-exitStats BYTE 2 DUP(?); stores 
+playerName BYTE 16 DUP(? )	;Store up to 15 digits + 1 for null term
+exitStats BYTE 2 DUP(? )	;stores
 
 
 
@@ -64,210 +64,209 @@ call writeString
 
 mov edx, OFFSET playerName
 mov ecx, 16
-call readString ;Checks ecx and does 16 - 1 to store 15 digits and then a null terminator
+call readString; Checks ecx and does 16 - 1 to store 15 digits and then a null terminator
 
 menu :
-	mov eax, 500
-	call Delay;creates 500 ms delay
+mov eax, 1000
+call Delay; creates 1000 ms delay
 
-	call clrscr;clears screen
+call clrscr; clears screen
 
-	mov edx, OFFSET outMenu
-	call writeString
+mov edx, OFFSET outMenu
+call writeString
+call readInt
+call crlf
 
-	call readInt
-	call crlf
+cmp eax, 5
+JZ terminate; Jumps to end of program
 
-	cmp eax, 5
-	JZ terminate;Jumps to end of program
+cmp eax, 1
+JZ display_Credits; Jumps to choice1
 
-	cmp eax, 1
-	JZ display_Credits;Jumps to choice1
+cmp eax, 2
+JZ add_Credits; Jumps to choice2
 
-	cmp eax, 2
-	JZ add_Credits;Jumps to choice2
+cmp eax, 3
+JZ play_Game; Jumps to choice3
 
-	cmp eax, 3
-	JZ play_Game;Jumps to choice3
+cmp eax, 4
+JZ display_Stats; Jumps to choice4
 
-	cmp eax, 4
-	JZ display_Stats;Jumps to choice4
-
-	JMP invalid_Choice
+JMP invalid_Choice
 
 
 display_Credits :
-	mov edx, OFFSET outBalance
-	call writeString
+mov edx, OFFSET outBalance
+call writeString
 
-	mov eax, balance
-	call writeDec;print balance
+mov eax, balance
+call writeDec; print balance
 
-	JMP menu
+JMP menu
 
 add_Credits :
-	mov edx, OFFSET outAddCred
-	call writeString
-	call readDec
+mov edx, OFFSET outAddCred
+call writeString
+call readDec
 
-	cmp eax, 0 
-	JZ error_Add_Credits ;Jump if entered amount isnt positive
+cmp eax, 0
+JZ error_Add_Credits; Jump if entered amount isnt positive
 
-	add eax, balance
-	cmp eax, MAX_ALLOWED
-	JA error_Add_Credits ;Jump if balance is over $20
+add eax, balance
+cmp eax, MAX_ALLOWED
+JA error_Add_Credits; Jump if balance is over $20
 
-	mov balance, eax
-	JMP menu ;back to menu
+mov balance, eax
+JMP menu; back to menu
 
-	error_Add_Credits : 
-		mov edx, OFFSET outErrorAddCredit
-		call writeString
-		JMP menu
+error_Add_Credits :
+mov edx, OFFSET outErrorAddCredit
+call writeString
+JMP menu
 
 
 play_Game :
-	CMP balance, 0
-	JZ insufficient_Funds ;Jumps if there is no money in balance
+CMP balance, 0
+JZ insufficient_Funds; Jumps if there is no money in balance
 
-	dec balance 
+dec balance
 
-	mov eax, 10
-	call RandomRange ;gives random number between 0-9
-	inc eax ;increments so the number is always between 1-10
-	mov randomNum, eax
-	
-	guess_Again: ;label you will go to after displaying invalid input if the user guess isnt between 1-10
-	mov edx, OFFSET outGuess
-	call writeString
-	call ReadDec
+mov eax, 10
+call RandomRange; gives random number between 0 - 9
+inc eax; increments so the number is always between 1 - 10
+mov randomNum, eax
 
-	;makes sure guess is between 1-10 and if not jump to error msg and give user another chance to guess
-	CMP eax, 10
-	JA invalid_Guess
-	CMP eax, 0
-	JBE invalid_Guess
+guess_Again : ; label you will go to after displaying invalid input if the user guess isnt between 1 - 10
+mov edx, OFFSET outGuess
+call writeString
+call ReadDec
 
-	inc gamesPlayed
+; makes sure guess is between 1 - 10 and if not jump to error msg and give user another chance to guess
+CMP eax, 10
+JA invalid_Guess
+CMP eax, 0
+JBE invalid_Guess
 
-	cmp eax, randomNum ;checks to see if guess was correct
-	JZ guess_Correct
-	JMP guess_Incorrect
+inc gamesPlayed
 
-	invalid_Guess:
-		mov edx, OFFSET outInvalidGuess
-		call writeString
-		call crlf
-		JMP guess_Again
+cmp eax, randomNum; checks to see if guess was correct
+JZ guess_Correct
+JMP guess_Incorrect
 
-	guess_Correct :
-		mov edx, OFFSET outCorrectAns
-		call writeString
-		call crlf
+invalid_Guess :
+mov edx, OFFSET outInvalidGuess
+call writeString
+call crlf
+JMP guess_Again
 
-		add balance, 2
-		inc correctGuesses
-		add moneyWon, 2
+guess_Correct :
+mov edx, OFFSET outCorrectAns
+call writeString
+call crlf
 
-		JMP play_Again
+add balance, 2
+inc correctGuesses
+add moneyWon, 2
 
-	guess_Incorrect :
-		mov edx, OFFSET outIncorrectAns
-		call writeString
-		mov eax, randomNum
-		call writeDec
-		call crlf
+JMP play_Again
 
-		inc missedGuesses
-		inc moneyLost
+guess_Incorrect :
+mov edx, OFFSET outIncorrectAns
+call writeString
+mov eax, randomNum
+call writeDec
+call crlf
 
-		JMP play_Again
+inc missedGuesses
+inc moneyLost
 
-	play_Again :
-		mov edx, OFFSET outPlayAgain
-		call writeString
-		call ReadDec
+JMP play_Again
 
-		cmp eax, 1
-		JZ play_Game
+play_Again :
+mov edx, OFFSET outPlayAgain
+call writeString
+call ReadDec
 
-		cmp eax, 2
-		JZ menu
+cmp eax, 1
+JZ play_Game
 
-		mov edx, OFFSET outErrorPlayAgain
-		call writeString
-		JMP play_Again
+cmp eax, 2
+JZ menu
 
-
-
-	insufficient_Funds:
-		mov edx, OFFSET  outInsufficientFunds
-		call writeString
-		JMP menu
+mov edx, OFFSET outErrorPlayAgain
+call writeString
+JMP play_Again
 
 
 
-display_Stats: 
-	mov edx, OFFSET outStatHeader
-	call writeString
-	call crlf
-	call crlf
+insufficient_Funds:
+mov edx, OFFSET  outInsufficientFunds
+call writeString
+JMP menu
 
-	mov edx, OFFSET outPlayerName
-	call writeString
-	mov edx, OFFSET playerName
-	call writeString
-	call crlf
 
-	mov edx, OFFSET outAvaliableCred
-	call writeString
-	mov eax, balance
-	call writeDec
-	call crlf
 
-	mov edx, OFFSET outGamesPlayed
-	call writeString
-	mov eax, gamesPlayed
-	call writeDec
-	call crlf
+display_Stats:
+mov edx, OFFSET outStatHeader
+call writeString
+call crlf
+call crlf
 
-	mov edx, OFFSET outCorrectGuesses
-	call writeString
-	mov eax, correctGuesses
-	call writeDec
-	call crlf
+mov edx, OFFSET outPlayerName
+call writeString
+mov edx, OFFSET playerName
+call writeString
+call crlf
 
-	mov edx, OFFSET outMissedGuesses
-	call writeString
-	mov eax, missedGuesses
-	call writeDec
-	call crlf
+mov edx, OFFSET outAvaliableCred
+call writeString
+mov eax, balance
+call writeDec
+call crlf
 
-	mov edx, OFFSET outMoneyWon
-	call writeString
-	mov eax, moneyWon
-	call writeDec
-	call crlf
+mov edx, OFFSET outGamesPlayed
+call writeString
+mov eax, gamesPlayed
+call writeDec
+call crlf
 
-	mov edx, OFFSET outMoneyLost
-	call writeString
-	mov eax, moneyLost
-	call writeDec
-	call crlf
-	call crlf
+mov edx, OFFSET outCorrectGuesses
+call writeString
+mov eax, correctGuesses
+call writeDec
+call crlf
 
-	mov edx,OFFSET outLeaveStats
-	call writeString
-	mov edx,OFFSET exitStats
-	mov ecx,2
-	call readString
+mov edx, OFFSET outMissedGuesses
+call writeString
+mov eax, missedGuesses
+call writeDec
+call crlf
 
-	JMP menu
+mov edx, OFFSET outMoneyWon
+call writeString
+mov eax, moneyWon
+call writeDec
+call crlf
 
-invalid_Choice : ;prints invalid input if a valid menu choice isnt picked
-	mov edx, OFFSET outInvalidChoice
-	call writeString
-	JMP menu
+mov edx, OFFSET outMoneyLost
+call writeString
+mov eax, moneyLost
+call writeDec
+call crlf
+call crlf
+
+mov edx, OFFSET outLeaveStats
+call writeString
+mov edx, OFFSET exitStats
+mov ecx, 2
+call readString
+
+JMP menu
+
+invalid_Choice : ; prints invalid input if a valid menu choice isnt picked
+mov edx, OFFSET outInvalidChoice
+call writeString
+JMP menu
 
 
 terminate :
