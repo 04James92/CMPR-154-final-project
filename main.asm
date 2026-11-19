@@ -22,12 +22,12 @@ outInvalidChoice BYTE "Invalid input try again ", 0
 outBalance BYTE "Your avaliable balance is: $", 0
 outAddCred BYTE "Please Enter the amount you would like to add: ", 0
 outErrorAddCredit BYTE "ERROR Too many credits in balance. Maximum allowable credit is $20.00", 0
-outInsufficientFunds BYTE "ERROR: Not enough credits to play. Please add some to play", 0
+outInsufficientFunds BYTE "Not enough credits to play. Please add some to play", 0
 outInvalidGuess BYTE "Your answer was invalid. Please pick a number between 1-10", 0
 outGuess BYTE "Please guess the number between 1-10: ", 0
 outCorrectAns BYTE "Congrats! you guessed it correct ", 0
 outIncorrectAns BYTE "You Lost!", 13, 10, "The correct answer is ", 0
-outPlayAgain BYTE "Do you want to play again? Enter 1 for yes, 2 for no ", 0
+outPlayAgain BYTE " Do you want to play again? Enter 1 for yes, 2 for no ", 0
 outErrorPlayAgain BYTE "Error invalid input try again", 0
 
 outStatHeader BYTE "=========PLAYER STATS=========", 0
