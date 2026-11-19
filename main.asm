@@ -81,16 +81,16 @@ menu :
   JZ terminate; Jumps to end of program
   
   cmp eax, 1
-  JZ display_Credits; Jumps to choice1
+  JZ display_Credits; Jumps to display credits
   
   cmp eax, 2
-  JZ add_Credits; Jumps to choice2
+  JZ add_Credits; Jumps to add credits
   
   cmp eax, 3
-  JZ play_Game; Jumps to choice3
+  JZ play_Game; Jumps to play game
   
   cmp eax, 4
-  JZ display_Stats; Jumps to choice4
+  JZ display_Stats; Jumps to display stats
   
   JMP invalid_Choice
 
