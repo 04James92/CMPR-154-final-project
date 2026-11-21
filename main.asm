@@ -180,7 +180,7 @@ play_Game :				; Plays the game
     
     add balance, 2
     inc correctGuesses
-    add moneyWon, 2
+    inc moneyWon
   
     JMP play_Again
   
