@@ -28,7 +28,7 @@ INCLUDE Irvine32.inc
   outGuess BYTE "Please guess the number between 1-10: ", 0
   outCorrectAns BYTE "Congrats! you guessed it correct ", 0
   outIncorrectAns BYTE "You Lost!", 13, 10, "The correct answer is ", 0
-  outPlayAgain BYTE " Do you want to play again? Enter 1 for yes, 2 for no ", 0
+  outPlayAgain BYTE "Do you want to play again? Enter 1 for yes, 2 for no ", 0
   outErrorPlayAgain BYTE "Error invalid input try again", 0
   
   outStatHeader BYTE "=========PLAYER STATS=========", 0
