@@ -185,7 +185,7 @@ guess_Correct:                      ; User guesses correctly
 
     add balance, 2
     inc correctGuesses
-    inc moneyWon
+    add moneyWon, 2
 
     JMP play_Again
 
